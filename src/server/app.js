@@ -5,8 +5,8 @@ import bodyParser from 'body-parser';
 import history from 'connect-history-api-fallback';
 import fs from 'fs';
 import path from 'path';
-import api from './api';
-import { value as config } from '../config';
+import { api } from './api';
+// import { value as config } from '../config';
 
 export const app = express();
 

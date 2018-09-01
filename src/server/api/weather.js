@@ -18,19 +18,22 @@ export const weather = express.Router();
 
 export const handleRequestInterceptor = async (request) => {
   if (request.method === 'get') {
-    const url = `${request.url}${createQueryParamString(request.params)}`;
+    const url = `${request.baseURL.slice(0, -1)}${request.url}${createQueryParamString(request.params)}`;
     try {
       const cachedReply = await redisClient.getAsync(url);
       if (cachedReply) {
-        request.data = cachedReply;
-        request.adapter = () => Promise.resolve({
-          data: cachedReply,
-          status: request.status,
-          statusText: request.statusText,
-          headers: request.headers,
-          config: request,
-          request
-        });
+        const cachedReplyJSON = JSON.parse(cachedReply);
+        request.data = cachedReplyJSON;
+        request.adapter = function myCustomAdapter() {
+          return Promise.resolve({
+            data: cachedReplyJSON,
+            status: request.status,
+            statusText: request.statusText,
+            headers: request.headers,
+            config: request,
+            request
+          });
+        };
       }
     } catch (error) {
       logger.error(error.message);
@@ -41,9 +44,9 @@ export const handleRequestInterceptor = async (request) => {
   return request;
 };
 
-export const handleResponseInterceptor = async (response) => {
-  if (response.config.method === 'get') {
-    redisClient.setex(response.config.url, config.WEATHER_DAILY_REDIS_CACHE_TIMEOUT, JSON.stringify(response.data));
+export const handleResponseInterceptor = (response) => {
+  if (response.config.method === 'get' && response.config.adapter.name !== 'myCustomAdapter') {
+    redisClient.setex(`${response.config.url}${createQueryParamString(response.config.params)}`, config.WEATHER_DAILY_REDIS_CACHE_TIMEOUT, JSON.stringify(response.data));
   }
 
   return response;
@@ -60,8 +63,9 @@ export const handleDailyRoute = async (req, res) => {
         q: city
       }
     });
+
     res.json({
-      data: weatherResults
+      data: weatherResults.data
     });
   } catch (error) {
     logger.error(error.message);

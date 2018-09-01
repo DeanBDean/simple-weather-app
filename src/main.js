@@ -1,5 +1,5 @@
 import { error, value as config } from './config';
-import app from './server/app';
+import { app } from './server/app';
 import { logger } from './server/logger';
 
 // validate required env vars
