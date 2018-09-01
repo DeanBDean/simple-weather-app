@@ -1,0 +1,63 @@
+{
+  "name": "simple-weather-app",
+  "version": "0.0.1",
+  "description": "A simple weather app",
+  "main": "index.js",
+  "scripts": {
+    "eslint": "node_modules/.bin/eslint -c ./.eslintrc.json src/*.js 'src/**/*.js' --quiet",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/DeanBDean/simple-weather-app"
+  },
+  "keywords": [
+    "weather",
+    "app",
+    "simple"
+  ],
+  "author": "Jesse Welnick",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@material-ui/core": "^3.0.1",
+    "axios": "^0.18.0",
+    "bluebird": "^3.5.1",
+    "body-parser": "^1.18.3",
+    "compression": "^1.7.3",
+    "connect-history-api-fallback": "^1.5.0",
+    "esm": "^3.0.81",
+    "express": "^4.16.3",
+    "express-winston": "^3.0.0",
+    "helmet": "^3.13.0",
+    "joi": "^13.6.0",
+    "lodash": "^4.17.10",
+    "prop-types": "^15.6.2",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
+    "react-redux": "^5.0.7",
+    "react-router": "^4.3.1",
+    "redis": "^2.8.0",
+    "redux": "^4.0.0",
+    "redux-thunk": "^2.3.0",
+    "winston": "^3.0.0"
+  },
+  "devDependencies": {
+    "css-loader": "^1.0.0",
+    "dotenv": "^6.0.0",
+    "eslint": "^5.4.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.11.1",
+    "jest": "^23.5.0",
+    "postcss-cssnext": "^3.1.0",
+    "postcss-each": "^0.10.0",
+    "postcss-import": "^12.0.0",
+    "postcss-loader": "^3.0.0",
+    "redux-devtools-extension": "^2.13.5",
+    "style-loader": "^0.23.0",
+    "webpack": "^4.17.1",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.7"
+  }
+}
