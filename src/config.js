@@ -2,6 +2,8 @@ import joi from 'joi';
 
 const configSchema = joi.object({
   DEFAULT_CITY: joi.string().default('Atlanta'),
+  DEFAULT_UNITS: joi.string().default('imperial'),
+  NODE_ENV: joi.string().default('production'),
   PORT: joi.number().integer().default(3000),
   REDIS_HOST: joi.string().required(),
   REDIS_PORT: joi.number().integer().default(6379),

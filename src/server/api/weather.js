@@ -9,8 +9,7 @@ const instance = axios.create({
   baseURL: config.WEATHER_API_URL,
   params: {
     apikey: config.WEATHER_API_KEY,
-    mode: 'json',
-    units: 'imperial'
+    mode: 'json'
   }
 });
 
@@ -57,10 +56,12 @@ instance.interceptors.response.use(handleResponseInterceptor, error => Promise.r
 
 export const handleDailyRoute = async (req, res) => {
   const city = req.params.city || config.DEFAULT_CITY;
+  const units = req.params.units || config.DEFAULT_UNITS;
   try {
     const weatherResults = await instance.get('/forecast/daily', {
       params: {
-        q: city
+        q: city,
+        units
       }
     });
 

@@ -1,0 +1,17 @@
+{
+  "ext": "js,json",
+  "ignore": [
+    "node_modules",
+    "**/__mocks__",
+    "**/__tests__",
+    "**/*.spec.js",
+    "**/*.test.js",
+    "**/client/**/*.js"
+  ],
+  "watch": [
+    ".babelrc",
+    "postcss.config.js",
+    "src/server",
+    "webpack.config.babel.js"
+  ]
+}
