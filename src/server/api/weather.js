@@ -16,7 +16,7 @@ const instance = axios.create({
 export const weather = express.Router();
 
 export const handleRequestInterceptor = async (request) => {
-  if (request.method === 'get') {
+  if (redisClient && request.method === 'get') {
     const url = `${request.baseURL.slice(0, -1)}${request.url}${createQueryParamString(request.params)}`;
     try {
       const cachedReply = await redisClient.getAsync(url);
@@ -44,7 +44,7 @@ export const handleRequestInterceptor = async (request) => {
 };
 
 export const handleResponseInterceptor = (response) => {
-  if (response.config.method === 'get' && response.config.adapter.name !== 'myCustomAdapter') {
+  if (redisClient && response.config.method === 'get' && response.config.adapter.name !== 'myCustomAdapter') {
     redisClient.setex(`${response.config.url}${createQueryParamString(response.config.params)}`, config.WEATHER_DAILY_REDIS_CACHE_TIMEOUT, JSON.stringify(response.data));
   }
 
@@ -57,10 +57,9 @@ instance.interceptors.response.use(handleResponseInterceptor, error => Promise.r
 export const sanitizeInputs = input => input.replace(/[^a-zA-Z]/gi, '');
 
 export const handleDailyRoute = async (req, res) => {
-  debugger
   const city = req.params.city ? sanitizeInputs(req.params.city) : config.DEFAULT_CITY;
   const units = req.params.units ? sanitizeInputs(req.params.units) : config.DEFAULT_UNITS;
-  debugger
+
   try {
     const weatherResults = await instance.get('/forecast/daily', {
       params: {
