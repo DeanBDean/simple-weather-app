@@ -12,7 +12,9 @@ import {
 import uuid from 'uuid/v4';
 
 export const types = {
-  SET_DAILY_WEATHER: `${APP_NAME}_SET_DAILY_WEATHER`
+  SET_DAILY_WEATHER: `${APP_NAME}_SET_DAILY_WEATHER`,
+  SET_OPEN_DAILY_WEATHER_LIST_ITEM: `${APP_NAME}_SET_OPEN_DAILY_WEATHER_LIST_ITEM`,
+  CLOSE_DAILY_WEATHER_LIST_ITEM: `${APP_NAME}_CLOSE_DAILY_WEATHER_LIST_ITME`
 };
 
 export const setWeather = weather => ({
@@ -88,4 +90,13 @@ export const setDailyWeather = (dailyWeatherArray, unitsTypes) => ({
     },
     clouds: dailyWeather.clouds
   }))
+});
+
+export const setDailyWeatherListItem = listItemIndex => ({
+  type: types.SET_OPEN_DAILY_WEATHER_LIST_ITEM,
+  openListItemIndex: listItemIndex
+});
+
+export const closeDailyWeatherListItem = () => ({
+  type: types.CLOSE_DAILY_WEATHER_LIST_ITEM
 });

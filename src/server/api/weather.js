@@ -54,9 +54,13 @@ export const handleResponseInterceptor = (response) => {
 instance.interceptors.request.use(handleRequestInterceptor, error => Promise.reject(error));
 instance.interceptors.response.use(handleResponseInterceptor, error => Promise.reject(error));
 
+export const sanitizeInputs = input => input.replace(/[^a-zA-Z]/gi, '');
+
 export const handleDailyRoute = async (req, res) => {
-  const city = req.params.city || config.DEFAULT_CITY;
-  const units = req.params.units || config.DEFAULT_UNITS;
+  debugger
+  const city = req.params.city ? sanitizeInputs(req.params.city) : config.DEFAULT_CITY;
+  const units = req.params.units ? sanitizeInputs(req.params.units) : config.DEFAULT_UNITS;
+  debugger
   try {
     const weatherResults = await instance.get('/forecast/daily', {
       params: {
