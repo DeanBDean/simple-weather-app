@@ -9,28 +9,30 @@ const instance = axios.create({
   baseURL: config.WEATHER_API_URL,
   params: {
     apikey: config.WEATHER_API_KEY,
-    mode: 'json',
-    units: 'imperial'
+    mode: 'json'
   }
 });
 
 export const weather = express.Router();
 
 export const handleRequestInterceptor = async (request) => {
-  if (request.method === 'get') {
-    const url = `${request.url}${createQueryParamString(request.params)}`;
+  if (redisClient && request.method === 'get') {
+    const url = `${request.baseURL.slice(0, -1)}${request.url}${createQueryParamString(request.params)}`;
     try {
       const cachedReply = await redisClient.getAsync(url);
       if (cachedReply) {
-        request.data = cachedReply;
-        request.adapter = () => Promise.resolve({
-          data: cachedReply,
-          status: request.status,
-          statusText: request.statusText,
-          headers: request.headers,
-          config: request,
-          request
-        });
+        const cachedReplyJSON = JSON.parse(cachedReply);
+        request.data = cachedReplyJSON;
+        request.adapter = function myCustomAdapter() {
+          return Promise.resolve({
+            data: cachedReplyJSON,
+            status: request.status,
+            statusText: request.statusText,
+            headers: request.headers,
+            config: request,
+            request
+          });
+        };
       }
     } catch (error) {
       logger.error(error.message);
@@ -41,9 +43,9 @@ export const handleRequestInterceptor = async (request) => {
   return request;
 };
 
-export const handleResponseInterceptor = async (response) => {
-  if (response.config.method === 'get') {
-    redisClient.setex(response.config.url, config.WEATHER_DAILY_REDIS_CACHE_TIMEOUT, JSON.stringify(response.data));
+export const handleResponseInterceptor = (response) => {
+  if (redisClient && response.config.method === 'get' && response.config.adapter.name !== 'myCustomAdapter') {
+    redisClient.setex(`${response.config.url}${createQueryParamString(response.config.params)}`, config.WEATHER_DAILY_REDIS_CACHE_TIMEOUT, JSON.stringify(response.data));
   }
 
   return response;
@@ -52,16 +54,22 @@ export const handleResponseInterceptor = async (response) => {
 instance.interceptors.request.use(handleRequestInterceptor, error => Promise.reject(error));
 instance.interceptors.response.use(handleResponseInterceptor, error => Promise.reject(error));
 
+export const sanitizeInputs = input => input.replace(/[^a-zA-Z]/gi, '');
+
 export const handleDailyRoute = async (req, res) => {
-  const city = req.params.city || config.DEFAULT_CITY;
+  const city = req.params.city ? sanitizeInputs(req.params.city) : config.DEFAULT_CITY;
+  const units = req.params.units ? sanitizeInputs(req.params.units) : config.DEFAULT_UNITS;
+
   try {
     const weatherResults = await instance.get('/forecast/daily', {
       params: {
-        q: city
+        q: city,
+        units
       }
     });
+
     res.json({
-      data: weatherResults
+      data: weatherResults.data
     });
   } catch (error) {
     logger.error(error.message);

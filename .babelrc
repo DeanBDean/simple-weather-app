@@ -1,0 +1,17 @@
+{
+  "plugins": [
+    ["css-modules-transform", {
+      "camelCase": true,
+      "extensions": [".css", ".less"],
+      "generateScopedName": "[folder]__[local]_[hash:base64:5]"
+    }],
+    ["react-hot-loader/babel"]
+  ],
+  "presets": [
+    ["@babel/preset-env", {
+      "useBuiltIns": "usage",
+      "targets": { "node": "current" }
+    }],
+    "@babel/preset-react"
+  ]
+}

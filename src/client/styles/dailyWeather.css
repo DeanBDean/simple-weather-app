@@ -1,0 +1,71 @@
+.paperContainer {
+  width: 800px;
+  min-height: 225px;
+  padding: 15px;
+}
+
+.smallerFont {
+  font-size: 80%;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cardContent {
+  margin-left: 15px;
+}
+
+.cardMedia {
+  height: 150px;
+  width: 150px;
+  margin-right: 15px;
+}
+
+.cardContentTypography {
+  font-size: 100%;
+}
+
+@media (width > 475px) and (width < 800px) {
+  .cardMedia {
+    height: 100px;
+    width: 100px;
+  }
+}
+
+@media (width > 375px) and (width < 475px) {
+  .cardMedia {
+    height: 75px;
+    width: 75px;
+  }
+
+  .cardContentTypography {
+    font-size: 70%;
+    margin-bottom: -10px;
+  }
+}
+
+@media (width < 375px) {
+  .cardMedia {
+    height: 50px;
+    width: 50px;
+    margin-right: 5px;
+  }
+
+  .cardContent {
+    margin-left: 5px;
+  }
+
+  .cardContentTypography {
+    font-size: 60%;
+    margin-bottom: -15px;
+  }
+}
