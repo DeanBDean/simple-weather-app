@@ -73,8 +73,8 @@ module.exports = {
         test: /\.png$/,
         use: [
           'file-loader',
-          'image-webpack-loader'
-        ]
+          DEV_MODE && 'image-webpack-loader'
+        ].filter(Boolean)
       },
       {
         test: /\.(woff|woff2|eot|ttf)$/,

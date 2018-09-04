@@ -1,0 +1,12 @@
+version: '0'
+services:
+  app:
+    image:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - PORT=3000
+    ports:
+      - 3000:3000
+      - 3000:6379
