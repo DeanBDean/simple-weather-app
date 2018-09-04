@@ -32,11 +32,11 @@ module.exports = {
     new webpack.DefinePlugin({
       APP_NAME: JSON.stringify('simple-weather-app'),
       DEFAULT_CITY: JSON.stringify(process.env.DEFAULT_CITY || 'Atlanta'),
+      DEFAULT_UNITS: JSON.stringify(process.env.DEFAULT_UNITS || 'imperial'),
       NODE_ENV: JSON.stringify(DEV_MODE ? 'development' : 'production')
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].css',
-      chunkFilename: '[id].css'
+      filename: 'styles.css'
     })
   ].filter(Boolean),
   module: {
@@ -53,8 +53,8 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        exclude: /node_modules/,
         use: [
+          DEV_MODE && 'css-hot-loader',
           DEV_MODE ? 'style-loader' : MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader',
@@ -67,6 +67,19 @@ module.exports = {
             }
           },
           'postcss-loader'
+        ].filter(Boolean)
+      },
+      {
+        test: /\.png$/,
+        use: [
+          'file-loader',
+          'image-webpack-loader'
+        ]
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf)$/,
+        use: [
+          { loader: 'file-loader' }
         ]
       }
     ]
@@ -75,7 +88,7 @@ module.exports = {
     runtimeChunk: false
   },
   resolve: {
-    extensions: ['.js'],
+    extensions: ['.js', '.css', '.png'],
     modules: [
       SRC_DIR,
       'node_modules'

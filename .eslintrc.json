@@ -12,6 +12,7 @@
   "globals": {
     "APP_NAME": false,
     "DEFAULT_CITY": false,
+    "DEFAULT_UNITS": false,
     "NODE_ENV": false
   },
   "rules": {

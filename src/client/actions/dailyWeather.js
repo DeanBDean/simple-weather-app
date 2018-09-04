@@ -9,6 +9,7 @@ import {
   gte,
   lte
 } from 'ramda';
+import uuid from 'uuid/v4';
 
 export const types = {
   SET_DAILY_WEATHER: `${APP_NAME}_SET_DAILY_WEATHER`
@@ -55,20 +56,23 @@ export const findDirectionFromDegrees = cond([
 
 export const setDailyWeather = (dailyWeatherArray, unitsTypes) => ({
   type: types.SET_DAILY_WEATHER,
-  dailyWeatherArray: dailyWeatherArray.map(dailyWeather => ({
+  dailyWeather: dailyWeatherArray.map(dailyWeather => ({
+    id: uuid(),
     datetime: moment.unix(dailyWeather.dt),
     temp: {
-      day: get(dailyWeather.temp.day),
-      min: get(dailyWeather.temp.min),
-      max: get(dailyWeather.temp.max),
-      night: get(dailyWeather.temp.night),
-      eve: get(dailyWeather.temp.eve),
-      morn: get(dailyWeather.temp.morn),
-      units: unitsTypes.temp
+      day: get(dailyWeather, 'temp.day'),
+      min: get(dailyWeather, 'temp.min'),
+      max: get(dailyWeather, 'temp.max'),
+      night: get(dailyWeather, 'temp.night'),
+      eve: get(dailyWeather, 'temp.eve'),
+      morn: get(dailyWeather, 'temp.morn'),
+      units: unitsTypes.temp,
+      unitsShort: unitsTypes.tempShort
     },
     pressure: {
       value: dailyWeather.pressure,
-      units: unitsTypes.pressure
+      units: unitsTypes.pressure,
+      unitsShort: unitsTypes.pressureShort
     },
     humidity: {
       value: dailyWeather.humidity,
@@ -78,6 +82,7 @@ export const setDailyWeather = (dailyWeatherArray, unitsTypes) => ({
     windspeed: {
       value: dailyWeather.speed,
       units: unitsTypes.windspeed,
+      unitsShort: unitsTypes.windspeedShort,
       degrees: dailyWeather.deg,
       direction: findDirectionFromDegrees(dailyWeather.deg)
     },
