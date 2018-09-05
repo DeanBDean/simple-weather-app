@@ -4,7 +4,7 @@ import compression from 'compression';
 import bodyParser from 'body-parser';
 import history from 'connect-history-api-fallback';
 import fs from 'fs';
-import { join, resolve } from 'path';
+import { join } from 'path';
 import { api } from './api';
 import { value as config } from '../config';
 // import { value as config } from '../config';
@@ -50,19 +50,20 @@ if (config.NODE_ENV === 'development') {
   });
 }
 
+// redirects to index for error messaging if invalid path has file extension
+app.use('/assets', express.static('dist/assets'));
+app.use('*', express.static('dist/assets'));
+
 app.use(history({
   rewrites: [{
     from: /(.+)\.(.+)/g,
     to: (context) => {
       const match = context.match[0];
 
-      if (match.split('.').length === 0 || fs.existsSync(resolve(__dirname, `../..${match}`))) {
+      if (match.split('.').length === 0 || fs.existsSync(join(__dirname, `../../dist${match}`))) {
         return match;
       }
       return '/index.html';
     }
   }]
 }));
-
-// redirects to index for error messaging if invalid path has file extension
-app.use(express.static('dist/assets'));
