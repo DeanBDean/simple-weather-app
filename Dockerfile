@@ -13,7 +13,6 @@ RUN npm install
 COPY . .
 RUN npm run build
 RUN chown -R node:$(id -gn node) /home/node
-EXPOSE 6379
 USER node
-
+EXPOSE 3000
 CMD [ "node", "src" ]

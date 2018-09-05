@@ -11,8 +11,8 @@ A simple app for the weather
 * App will be running at http://localhost.com:3000
 ## Setting Up For Local Docker Build
 
-* Change NODE_ENV in your local **.env** to `production`
 * [Install Docker Compose and prereqs](https://docs.docker.com/compose/gettingstarted/)
-* Run `docker-compose -f docker-compose.local.yml build`
-* Run `1
-* If you go back to local development, be sure to change your NODE_ENV back to `development`
+* Run `docker-compose -f docker-compose.local.yml build`. You won't have to run this again unless you update the code.
+* Run `docker-compose -f docker-compose.local.yml up`. Then you can access the dockerized version of the app from `localhost:3000`
+* If you need to destroy the app, then run `docker-compose -f docker-compose.local.yml down`
+* You don't need to run local redis for this because the docker-compose config sets up it's own local redis
